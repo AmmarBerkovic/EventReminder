@@ -35,8 +35,8 @@ public class DLL {
 		}
 	}
 
-	public static List<Event> withdrawMonth(String date) throws SQLException {
-		query = "SELECT * FROM EVENTS WHERE date = '"+date+"'";
+	public static List<Event> withdrawMonth(String month) throws SQLException {
+		query = "select * from events where date like '%"+month+"'";
 		List<Event> list = new ArrayList<>();
 		try(Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery(query)){
 			while (rs.next())
@@ -45,6 +45,10 @@ public class DLL {
 			return list;
 			
 		}
+	}
+
+	public static List<Event> withdrawWeek(String parameter) {
+		return null;
 	}
 	
 	

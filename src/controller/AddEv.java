@@ -2,44 +2,33 @@ package controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import dao.DLL;
-import model.Event;
+import dao.DML;
 
-@WebServlet("/show")
-public class ListBy extends HttpServlet {
+
+@WebServlet("/join")
+public class AddEv extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		List<Event> list = new ArrayList<>();
-		if (request.getParameter("by").equals("week")) {
-			try {
-				list = DLL.withdrawDate(request.getParameter("week"));
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else if (request.getParameter("by").equals("month")) {
-			String param = converter(request.getParameter("month"));
-			try {
-				list = DLL.withdrawMonth(param);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String date=merge(request.getParameter("day"),converter(request.getParameter("month")));
+		try {
+			DML.insert(request.getParameter("event"), date, request.getParameter("desc"));
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		HttpSession session = request.getSession();
-		session.setAttribute("list", list);
-		request.getRequestDispatcher("Table.jsp").forward(request, response);
+		request.getRequestDispatcher("Home.jsp").forward(request, response);
+		
+	}
+	
+	public static String merge(String day,String month) {
+		return day+"/"+month;
 	}
 	
 	public static String converter (String str) {
